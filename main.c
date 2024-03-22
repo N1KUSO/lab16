@@ -17,6 +17,16 @@ int getMax(int *a, int n) {
     return max;
 }
 
+int getMin(int *a, int n) {
+    int min = a[0];
+    for(int i = 1; i < n; i++) {
+        if(a[i] < min) {
+            min = a[i];
+        }
+    }
+    return min;
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -48,8 +58,23 @@ void task2() {
     assert(m2.values[0][0] == 2 && m2.values[0][1] == 5 && m2.values[1][1] == 1 && m2.values[2][0] == 3 && m2.values[3][1] == 2);
 }
 
+void task3() {
+    int values1[] = {3, 5, 2, 4, 3, 3, 2, 5 ,1, 8, 2, 7, 6, 1, 4, 4, 8, 3};
+    int values2[] = {2, 5, 12, 8, 1, 4, 1, 4, 8, 6, 3, 1, 3, 6, 11, 1, 2, 7, 8, 15};
+
+    matrix m1 = createMatrixFromArray(values1, 3, 6);
+    matrix m2 = createMatrixFromArray(values2, 4, 5);
+
+    selectionSortColsMatrixByColCriteria(m1, getMin);
+    selectionSortColsMatrixByColCriteria(m2, getMin);
+
+    assert(m1.values[0][0] == 5 && m1.values[1][1] == 1 && m1.values[1][4] == 7 && m1.values[2][2] == 6);
+    assert(m2.values[0][0] == 2 && m2.values[1][3] == 4 && m2.values[2][4] == 6 && m2.values[3][3] == 7);
+}
+
 int main() {
     task1();
     task2();
+    task3();
     return 0;
 }
