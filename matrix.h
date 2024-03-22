@@ -136,24 +136,29 @@ void swap(int *a, int *b) {
 }
 
 
-void insertionSortRowsMatrixByRowCriteria(matrix m, int (*criteria)(int *, int)) {
-    int *values = (int *)malloc(sizeof(int) * m.nRows);
-    if (values == NULL) {
-        return;
+void insertionSortRowsMatrixByRowCriteria(matrix *m, int (*criteria)(int *, int)) {
+    int nRows = m->nRows;
+    int nCols = m->nCols;
+
+    int *values = (int *)malloc(sizeof(int) * nRows);
+
+    for (int i = 0; i < nRows; i++) {
+        values[i] = criteria(m->values[i], nCols);
     }
 
-    for (size_t i = 0; i < m.nRows; i++) {
-        values[i] = criteria(m.values[i], m.nCols);
-    }
-
-    for (int i = 1; i < m.nRows; i++) {
+    for (int i = 1; i < nRows; i++) {
         int j = i - 1;
-        while (values[i] < values[j] && j >= 0) {
+        int tempValue = values[i];
+        int *tempRow = m->values[i];
+
+        while (j >= 0 && tempValue < values[j]) {
             values[j + 1] = values[j];
-            swapRows(&m, j + 1, j);
-            --j;
+            m->values[j + 1] = m->values[j];
+            j--;
         }
-        values[j + 1] = values[i];
+
+        values[j + 1] = tempValue;
+        m->values[j + 1] = tempRow;
     }
 
     free(values);
