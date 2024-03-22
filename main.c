@@ -27,6 +27,35 @@ int getMin(int *a, int n) {
     return min;
 }
 
+matrix mulMatrices(matrix m1, matrix m2) {
+    matrix result = getMemMatrix(m1.nRows, m2.nCols);
+
+    for (int i = 0; i < m1.nRows; i++) {
+        for (int j = 0; j < m2.nCols; j++) {
+            for (int k = 0; k < m1.nCols; k++) {
+                result.values[i][j] += m1.values[i][k] * m2.values[k][j];
+            }
+        }
+    }
+
+    return result;
+}
+
+void getSquareOfMatrixIfSymmetric(matrix *m) {
+    if (!isSquareMatrix(m)) {
+        return;
+    }
+
+    if (!isSymmetricMatrix(m)) {
+        return;
+    }
+
+    matrix squared = mulMatrices(*m, *m);
+
+    freeMemMatrix(m);
+    *m = squared;
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -72,9 +101,23 @@ void task3() {
     assert(m2.values[0][0] == 2 && m2.values[1][3] == 4 && m2.values[2][4] == 6 && m2.values[3][3] == 7);
 }
 
+void task4() {
+    int values1[] = {1,2,3,2,4,5,3,5,6};
+    int values2[] = {1,2,3,4,5,6,7,8,9};
+    matrix m1 = createMatrixFromArray(values1, 3, 3);
+    matrix m2 = createMatrixFromArray(values2, 3, 3);
+
+    getSquareOfMatrixIfSymmetric(&m1);
+    getSquareOfMatrixIfSymmetric(&m2);
+
+    assert(m1.values[0][0] == 14 && m1.values[1][0] == 25 && m1.values[2][1] == 56);
+    assert(m2.values[0][0] == 1 && m2.values[1][0] == 4 && m2.values[2][1] == 8);
+}
+
 int main() {
     task1();
     task2();
     task3();
+    task4();
     return 0;
 }
