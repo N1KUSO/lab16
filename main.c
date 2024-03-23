@@ -56,6 +56,37 @@ void getSquareOfMatrixIfSymmetric(matrix *m) {
     *m = squared;
 }
 
+bool isUnique(long long *a, int n) {
+    for (int i = 0; i < n - 1; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            if (a[i] == a[j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+long long getSum(int *a, int n) {
+    long long sum = 0;
+    for (int i = 0; i < n; ++i) {
+        sum += a[i];
+    }
+    return sum;
+}
+
+void transposeIfMatrixHasNotEqualSumOfRows(matrix m) {
+    long long rowSums[m.nRows];
+
+    for (int i = 0; i < m.nRows; ++i) {
+        rowSums[i] = getSum(m.values[i], m.nCols);
+    }
+
+    if (isUnique(rowSums, m.nRows)) {
+        transposeSquareMatrix(&m);
+    }
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -114,10 +145,24 @@ void task4() {
     assert(m2.values[0][0] == 1 && m2.values[1][0] == 4 && m2.values[2][1] == 8);
 }
 
+void task5() {
+    int values1[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int values2[] = {1, 2, 3, 1, 2, 3, 1, 2, 3};
+    matrix m1 = createMatrixFromArray(values1, 3, 3);
+    matrix m2 = createMatrixFromArray(values2, 3, 3);
+
+    transposeIfMatrixHasNotEqualSumOfRows(m1);
+    transposeIfMatrixHasNotEqualSumOfRows(m2);
+
+    assert(m1.values[0][0] == 1 && m1.values[0][1] == 4 && m1.values[2][1] == 6);
+    assert(m2.values[0][0] == 1 && m2.values[0][1] == 2 && m2.values[2][1] == 2);
+}
+
 int main() {
     task1();
     task2();
     task3();
     task4();
+    task5();
     return 0;
 }
