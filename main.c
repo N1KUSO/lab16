@@ -100,6 +100,43 @@ bool isMutuallyInverseMatrices(matrix m1, matrix m2) {
     return result;
 }
 
+void outputArray(int *a, int n) {
+    for(size_t i = 0; i < n; i++) {
+        printf("%d ", a[i]);
+    }
+}
+
+long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
+    long long sum = 0;
+    int nRows = m.nRows;
+    int nCols = m.nCols;
+
+    int pseudoDiagonalsCount = nRows + nCols - 2;
+    int *maxElements = (int *)malloc(pseudoDiagonalsCount * sizeof(int));
+
+    for (int i = 0; i < pseudoDiagonalsCount; ++i) {
+        maxElements[i] = INT_MIN;
+    }
+
+    for (int i = 0; i < nRows; ++i) {
+        for (int j = 0; j < nCols; ++j) {
+            int pseudoDiagonalIndex = i + (nCols - 1) - j;
+            if (m.values[i][j] > maxElements[pseudoDiagonalIndex]) {
+                maxElements[pseudoDiagonalIndex] = m.values[i][j];
+            }
+        }
+    }
+
+    for (int i = 0; i < pseudoDiagonalsCount; ++i) {
+        sum += maxElements[i];
+    }
+
+    free(maxElements);
+    return sum;
+}
+
+
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -186,6 +223,17 @@ void task6() {
 
 }
 
+void task7() {
+    int values1[] = {3,2,5,4,1,3,6,3,3,2,1,2};
+    int values2[] = {-3, -2, -5, -4, -1, -3, -6, -3};
+    matrix m1 = createMatrixFromArray(values1, 3, 4);
+    matrix m2 = createMatrixFromArray(values2, 4, 2);
+
+    assert(findSumOfMaxesOfPseudoDiagonal(m1) == 20);
+    assert(findSumOfMaxesOfPseudoDiagonal(m2) == -9);
+}
+
+
 int main() {
     task1();
     task2();
@@ -193,5 +241,6 @@ int main() {
     task4();
     task5();
     task6();
+    task7();
     return 0;
 }
