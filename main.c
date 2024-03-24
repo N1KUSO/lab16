@@ -87,6 +87,19 @@ void transposeIfMatrixHasNotEqualSumOfRows(matrix m) {
     }
 }
 
+bool isMutuallyInverseMatrices(matrix m1, matrix m2) {
+    if (!isSquareMatrix(&m1) || !isSquareMatrix(&m2)) {
+        return false;
+    }
+
+    matrix product = mulMatrices(m1, m2);
+
+    bool result = isEMatrix(&product);
+
+    freeMemMatrix(&product);
+    return result;
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -158,11 +171,27 @@ void task5() {
     assert(m2.values[0][0] == 1 && m2.values[0][1] == 2 && m2.values[2][1] == 2);
 }
 
+void task6() {
+    int values1[] = {1, 0, 0, 1};
+    matrix m1 = createMatrixFromArray(values1, 2, 2);
+    int values2[] = {1, 0, 0, 1};
+    matrix m2 = createMatrixFromArray(values2, 2, 2);
+    int values3[] = {1, 2, 3, 4};
+    matrix m3 = createMatrixFromArray(values3, 2, 2);
+    int values4[] = {1, 2, 3, 4, 5, 6};
+    matrix m4 = createMatrixFromArray(values4, 3, 2);
+
+    assert(isMutuallyInverseMatrices(m1, m2));
+    assert(!isMutuallyInverseMatrices(m3, m4));
+
+}
+
 int main() {
     task1();
     task2();
     task3();
     task4();
     task5();
+    task6();
     return 0;
 }

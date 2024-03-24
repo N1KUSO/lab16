@@ -135,6 +135,9 @@ void swap(int *a, int *b) {
     b = temp;
 }
 
+int max(int a, int b) {
+    return a > b ? a : b;
+}
 
 void insertionSortRowsMatrixByRowCriteria(matrix *m, int (*criteria)(int *, int)) {
     int nRows = m->nRows;
