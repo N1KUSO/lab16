@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <math.h>
 
 typedef struct matrix {
     int **values;
@@ -156,6 +157,34 @@ void insertionSortRowsMatrixByRowCriteria(matrix *m, int (*criteria)(int *, int)
     for (int i = 1; i < nRows; i++) {
         int j = i - 1;
         int tempValue = values[i];
+        int *tempRow = m->values[i];
+
+        while (j >= 0 && tempValue < values[j]) {
+            values[j + 1] = values[j];
+            m->values[j + 1] = m->values[j];
+            j--;
+        }
+
+        values[j + 1] = tempValue;
+        m->values[j + 1] = tempRow;
+    }
+
+    free(values);
+}
+
+void insertionSortRowsMatrixByRowCriteriaF(matrix *m, float (*criteria)(int *, int)) {
+    int nRows = m->nRows;
+    int nCols = m->nCols;
+
+    float *values = (float *)malloc(sizeof(float) * nRows);
+
+    for (int i = 0; i < nRows; i++) {
+        values[i] = criteria(m->values[i], nCols);
+    }
+
+    for (int i = 1; i < nRows; i++) {
+        int j = i - 1;
+        float tempValue = values[i];
         int *tempRow = m->values[i];
 
         while (j >= 0 && tempValue < values[j]) {
