@@ -9,8 +9,8 @@ void swapMinAndMaxRows(matrix m) {
 
 int getMax(int *a, int n) {
     int max = a[0];
-    for(int i = 1; i < n; i++) {
-        if(a[i] > max) {
+    for (int i = 1; i < n; i++) {
+        if (a[i] > max) {
             max = a[i];
         }
     }
@@ -19,8 +19,8 @@ int getMax(int *a, int n) {
 
 int getMin(int *a, int n) {
     int min = a[0];
-    for(int i = 1; i < n; i++) {
-        if(a[i] < min) {
+    for (int i = 1; i < n; i++) {
+        if (a[i] < min) {
             min = a[i];
         }
     }
@@ -101,7 +101,7 @@ bool isMutuallyInverseMatrices(matrix m1, matrix m2) {
 }
 
 void outputArray(int *a, int n) {
-    for(size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         printf("%d ", a[i]);
     }
 }
@@ -112,7 +112,7 @@ long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
     int nCols = m.nCols;
 
     int pseudoDiagonalsCount = nRows + nCols - 2;
-    int *maxElements = (int *)malloc(pseudoDiagonalsCount * sizeof(int));
+    int *maxElements = (int *) malloc(pseudoDiagonalsCount * sizeof(int));
 
     for (int i = 0; i < pseudoDiagonalsCount; ++i) {
         maxElements[i] = INT_MIN;
@@ -135,12 +135,54 @@ long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
     return sum;
 }
 
+int getMinInArea(matrix m) {
+    position max_pos = getMaxValuePos(m);
 
+    int min = m.values[max_pos.rowIndex][max_pos.colIndex];
+    int row = max_pos.rowIndex - 1;
+    int elementary_col;
+
+    if (max_pos.colIndex - 1 >= 0) {
+        elementary_col = max_pos.colIndex - 1;
+    } else {
+        elementary_col = 0;
+    }
+
+    int col = elementary_col;
+    int col_final;
+
+    if (max_pos.colIndex + 1 <= m.nCols - 1) {
+        col_final = max_pos.colIndex + 1;
+    } else {
+        col_final = m.nCols - 1;
+    }
+
+    for (int i = row; i >= 0; i--) {
+        for (int j = col; j <= col_final; j++) {
+            min = min < m.values[i][j] ? min : m.values[i][j];
+        }
+
+        if (elementary_col - 1 >= 0) {
+            elementary_col = elementary_col - 1;
+        } else {
+            elementary_col = 0;
+        }
+
+        col = elementary_col;
+
+        if (col_final + 1 <= m.nCols - 1) {
+            col_final = col_final + 1;
+        } else {
+            col_final = m.nCols - 1;
+        }
+    }
+        return min;
+}
 
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
-    int value3[] = {3,2,1,0};
+    int value3[] = {3, 2, 1, 0};
     matrix m1 = createMatrixFromArray(value1, 3, 3);
     matrix m2 = createMatrixFromArray(value2, 4, 4);
     matrix m3 = createMatrixFromArray(value3, 2, 2);
@@ -165,11 +207,12 @@ void task2() {
     insertionSortRowsMatrixByRowCriteria(&m2, getMax);
 
     assert(m1.values[0][0] == 3 && m1.values[0][1] == 2 && m1.values[1][1] == 1 && m1.values[2][2] == 1);
-    assert(m2.values[0][0] == 2 && m2.values[0][1] == 5 && m2.values[1][1] == 1 && m2.values[2][0] == 3 && m2.values[3][1] == 2);
+    assert(m2.values[0][0] == 2 && m2.values[0][1] == 5 && m2.values[1][1] == 1 && m2.values[2][0] == 3 &&
+           m2.values[3][1] == 2);
 }
 
 void task3() {
-    int values1[] = {3, 5, 2, 4, 3, 3, 2, 5 ,1, 8, 2, 7, 6, 1, 4, 4, 8, 3};
+    int values1[] = {3, 5, 2, 4, 3, 3, 2, 5, 1, 8, 2, 7, 6, 1, 4, 4, 8, 3};
     int values2[] = {2, 5, 12, 8, 1, 4, 1, 4, 8, 6, 3, 1, 3, 6, 11, 1, 2, 7, 8, 15};
 
     matrix m1 = createMatrixFromArray(values1, 3, 6);
@@ -183,8 +226,8 @@ void task3() {
 }
 
 void task4() {
-    int values1[] = {1,2,3,2,4,5,3,5,6};
-    int values2[] = {1,2,3,4,5,6,7,8,9};
+    int values1[] = {1, 2, 3, 2, 4, 5, 3, 5, 6};
+    int values2[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     matrix m1 = createMatrixFromArray(values1, 3, 3);
     matrix m2 = createMatrixFromArray(values2, 3, 3);
 
@@ -224,13 +267,23 @@ void task6() {
 }
 
 void task7() {
-    int values1[] = {3,2,5,4,1,3,6,3,3,2,1,2};
+    int values1[] = {3, 2, 5, 4, 1, 3, 6, 3, 3, 2, 1, 2};
     int values2[] = {-3, -2, -5, -4, -1, -3, -6, -3};
     matrix m1 = createMatrixFromArray(values1, 3, 4);
     matrix m2 = createMatrixFromArray(values2, 4, 2);
 
     assert(findSumOfMaxesOfPseudoDiagonal(m1) == 20);
     assert(findSumOfMaxesOfPseudoDiagonal(m2) == -9);
+}
+
+void task8() {
+    int values1[] = {10, 7, 5, 6, 3, 11, 8, 9, 4, 1, 12, 2};
+    int values2[] = {6, 8, 9, 2, 7, 12, 3, 4, 10, 11, 5, 1};
+
+    matrix m1 = createMatrixFromArray(values1, 3, 4);
+    matrix m2 = createMatrixFromArray(values2, 3, 4);
+
+    assert(getMinInArea(m1) == 5 && getMinInArea(m2) == 6);
 }
 
 
@@ -242,5 +295,6 @@ int main() {
     task5();
     task6();
     task7();
+    task8();
     return 0;
 }
