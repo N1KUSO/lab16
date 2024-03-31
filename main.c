@@ -399,6 +399,35 @@ int getVectorIndexWithMaxAngle(matrix m, int *b) {
     return maxIndex;
 }
 
+long long getScalarProductRowAndCol(matrix m, int row, int col) {
+    long long scalarProduct = 0;
+    int n = m.nCols;
+
+    for(int i = 0; i < n; i++) {
+        scalarProduct += m.values[row][i] * m.values[i][col];
+    }
+
+    return scalarProduct;
+}
+
+long long getSpecialScalarProduct(matrix m, int n) {
+    long long maxScalarProduct = LLONG_MAX;
+    int maxRow = 0, minCol = 0;
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(m.values[i][j] > m.values[maxRow][minCol]) {
+                maxRow = i;
+                minCol = j;
+            }
+        }
+    }
+
+    maxScalarProduct = getScalarProductRowAndCol(m, maxRow, minCol);
+
+    return maxScalarProduct;
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -615,6 +644,16 @@ void task17() {
     assert(getVectorIndexWithMaxAngle(m1, b) == 2 && getVectorIndexWithMaxAngle(m2, b) == 0);
 }
 
+void task18() {
+    int values1[] = {1,2,3,4};
+    int values2[] = {2,3,4,5,6,7,8,10,12};
+
+    matrix m1 = createMatrixFromArray(values1, 2, 2);
+    matrix m2 = createMatrixFromArray(values2, 3, 3);
+
+    assert(getSpecialScalarProduct(m1, 2) == 22 && getSpecialScalarProduct(m2, 3) == 246);
+}
+
 int main() {
     task1();
     task2();
@@ -632,6 +671,7 @@ int main() {
     task14();
     task16();
     task17();
+    task18();
 
     return 0;
 }
