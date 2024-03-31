@@ -267,6 +267,42 @@ int countNonDescendingRowsMatrices(matrix *ms, int nMatrix) {
     return count;
 }
 
+int countValues(const int *a, int n, int value) {
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        if (a[i] == value) {
+            count++;
+        }
+    }
+    return count;
+}
+
+int countZeroRows(matrix m) {
+    int count = 0;
+    for (int i = 0; i < m.nRows; i++) {
+        int zeroCount = countValues(m.values[i], m.nCols, 0);
+        if (zeroCount == m.nCols) {
+            count++;
+        }
+    }
+    return count;
+}
+
+void printMatrixWithMaxZeroRows(matrix *ms, int nMatrix) {
+    int arr_count[nMatrix];
+    int max;
+    int count;
+    for (int i = 0; i < nMatrix; i++) {
+        count = countZeroRows(ms[i]);
+        max = max > count ? max : count;
+        arr_count[i] = count;
+    }
+    for (int i = 0; i < nMatrix; ++i) {
+        if (arr_count[i] == max)
+            outputMatrix(ms[i]);
+    }
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -445,6 +481,23 @@ void task13() {
     assert(countNonDescendingRowsMatrices(matrices2, 2) == 1);
 }
 
+void task14() {
+    int values1[] = {0, 1, 1, 0, 0 , 0};
+    int values2[] = {1,1,2,1,1,1};
+    int values3[] = {0,0,0,0,4,7};
+    int values4[] = {0,0,0,1,0,0};
+    int values5[] = {0,1,0,2,0,3};
+
+    matrix m1 = createMatrixFromArray(values1, 3, 2);
+    matrix m2 = createMatrixFromArray(values2, 3, 2);
+    matrix m3 = createMatrixFromArray(values3, 3, 2);
+    matrix m4 = createMatrixFromArray(values4, 3, 2);
+    matrix m5 = createMatrixFromArray(values5, 3, 2);
+
+    assert(countZeroRows(m1) == 1 && countZeroRows(m2) == 0 && countZeroRows(m3) == 2 && countZeroRows(m4) == 2 &&
+                   countZeroRows(m5) == 0);
+}
+
 int main() {
     task1();
     task2();
@@ -459,5 +512,6 @@ int main() {
     task11();
     task12();
     task13();
+    task14();
     return 0;
 }
