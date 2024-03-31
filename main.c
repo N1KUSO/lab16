@@ -331,6 +331,35 @@ void printMatrixWithMinNorm(matrix *ms, int n) {
     }
 }
 
+int getNSpecialElement2(matrix m) {
+    int nSpecial = 0;
+
+    for (int i = 0; i < m.nRows; i++) {
+        for (int j = 0; j < m.nCols; j++) {
+            bool isSpecial = true;
+
+            for (int k = 0; k < j; k++) {
+                if (m.values[i][k] >= m.values[i][j]) {
+                    isSpecial = false;
+                    break;
+                }
+            }
+            for (int k = j + 1; k < m.nCols; k++) {
+                if (m.values[i][k] <= m.values[i][j]) {
+                    isSpecial = false;
+                    break;
+                }
+            }
+
+            if (isSpecial) {
+                nSpecial++;
+            }
+        }
+    }
+
+    return nSpecial;
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -526,6 +555,16 @@ void task14() {
                    countZeroRows(m5) == 0);
 }
 
+void task16() {
+    int values1[] = {2, 3, 5, 5,4,6,2,3,8,12,12,12,2,1,2};
+    int values2[] = {2, 3, 3, 6, 12, 8, 9, 1, 1, 3};
+
+    matrix m1 = createMatrixFromArray(values1, 3, 5);
+    matrix m2 = createMatrixFromArray(values2, 3, 3);
+
+    assert(getNSpecialElement2(m1) == 4 && getNSpecialElement2(m2) == 2);
+}
+
 int main() {
     task1();
     task2();
@@ -541,5 +580,6 @@ int main() {
     task12();
     task13();
     task14();
+    task16();
     return 0;
 }
