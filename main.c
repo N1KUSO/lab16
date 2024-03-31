@@ -100,12 +100,6 @@ bool isMutuallyInverseMatrices(matrix m1, matrix m2) {
     return result;
 }
 
-void outputArray(int *a, int n) {
-    for (size_t i = 0; i < n; i++) {
-        printf("%d ", a[i]);
-    }
-}
-
 long long findSumOfMaxesOfPseudoDiagonal(matrix m) {
     long long sum = 0;
     int nRows = m.nRows;
@@ -176,7 +170,7 @@ int getMinInArea(matrix m) {
             col_final = m.nCols - 1;
         }
     }
-        return min;
+    return min;
 }
 
 float getDistance(int *a, int n) {
@@ -189,6 +183,37 @@ float getDistance(int *a, int n) {
 
 void sortByDistances(matrix m) {
     insertionSortRowsMatrixByRowCriteriaF(&m, getDistance);
+}
+
+int cmp_long_long(const void *pa, const void *pb) {
+    if (*(long long int *) pa - *(long long int *) pb < 0)
+        return -1;
+    if (*(long long int *) pa - *(long long int *) pb > 0)
+        return 1;
+    return 0;
+}
+
+int countNUnique(long long *a, int n) {
+    int count = 0;
+    int is_unique = 0;
+    for (int i = 0; i < n - 1; i++) {
+        if (!is_unique && a[i] == a[i + 1]) {
+            count += 1;
+            is_unique = 1;
+        } else
+            is_unique = 0;
+    }
+    return count;
+}
+
+int countEqClassesByRowsSum(matrix m) {
+    long long temp[m.nRows];
+    for (int i = 0; i < m.nRows; i++) {
+        temp[i] = getSum(m.values[i], m.nCols);
+    }
+    qsort(temp, m.nRows, sizeof(long long int), cmp_long_long);
+
+    return countNUnique(temp, m.nRows);
 }
 
 void task1() {
@@ -265,12 +290,13 @@ void task5() {
 
 void task6() {
     int values1[] = {1, 0, 0, 1};
-    matrix m1 = createMatrixFromArray(values1, 2, 2);
     int values2[] = {1, 0, 0, 1};
-    matrix m2 = createMatrixFromArray(values2, 2, 2);
     int values3[] = {1, 2, 3, 4};
-    matrix m3 = createMatrixFromArray(values3, 2, 2);
     int values4[] = {1, 2, 3, 4, 5, 6};
+
+    matrix m1 = createMatrixFromArray(values1, 2, 2);
+    matrix m2 = createMatrixFromArray(values2, 2, 2);
+    matrix m3 = createMatrixFromArray(values3, 2, 2);
     matrix m4 = createMatrixFromArray(values4, 3, 2);
 
     assert(isMutuallyInverseMatrices(m1, m2));
@@ -281,6 +307,7 @@ void task6() {
 void task7() {
     int values1[] = {3, 2, 5, 4, 1, 3, 6, 3, 3, 2, 1, 2};
     int values2[] = {-3, -2, -5, -4, -1, -3, -6, -3};
+
     matrix m1 = createMatrixFromArray(values1, 3, 4);
     matrix m2 = createMatrixFromArray(values2, 4, 2);
 
@@ -312,6 +339,16 @@ void task9() {
     assert(m2.values[0][0] == 6 && m2.values[1][0] == 7 && m2.values[2][1] == 11);
 }
 
+void task10() {
+    int values1[] = {1, 2, 3, 4, 2, 3, 1, 2, 3};
+    matrix m1 = createMatrixFromArray(values1, 3, 3);
+
+    int values2[] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+    matrix m2 = createMatrixFromArray(values2, 3, 3);
+
+    assert(countEqClassesByRowsSum(m1) == 1 && countEqClassesByRowsSum(m2) == 1);
+}
+
 int main() {
     task1();
     task2();
@@ -322,5 +359,6 @@ int main() {
     task7();
     task8();
     task9();
+    task10();
     return 0;
 }
