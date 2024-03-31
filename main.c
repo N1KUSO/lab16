@@ -216,6 +216,24 @@ int countEqClassesByRowsSum(matrix m) {
     return countNUnique(temp, m.nRows);
 }
 
+int getNSpecialElement(matrix m) {
+    int count = 0;
+    for (int j = 0; j < m.nCols; ++j) {
+        for (int i = 0; i < m.nRows; ++i) {
+            int sum = 0;
+            for (int k = 0; k < m.nRows; ++k) {
+                if (k != i) {
+                    sum += m.values[k][j];
+                }
+            }
+            if (m.values[i][j] > sum) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -349,6 +367,16 @@ void task10() {
     assert(countEqClassesByRowsSum(m1) == 1 && countEqClassesByRowsSum(m2) == 1);
 }
 
+void task11() {
+    int values1[] = {3, 5, 5, 4, 2, 3, 6, 7, 12, 2, 1, 2};
+    matrix m1 = createMatrixFromArray(values1, 3, 4);
+
+    int values2[] = {3, 6, 9, 12, 5, 8, 11, 14, 7};
+    matrix m2 = createMatrixFromArray(values2, 3, 3);
+
+    assert(getNSpecialElement(m1) == 2 && getNSpecialElement(m2) == 1);
+}
+
 int main() {
     task1();
     task2();
@@ -360,5 +388,6 @@ int main() {
     task8();
     task9();
     task10();
+    task11();
     return 0;
 }
