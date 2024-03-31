@@ -360,6 +360,45 @@ int getNSpecialElement2(matrix m) {
     return nSpecial;
 }
 
+double getScalarProduct(int *a, int *b, int n) {
+    double product = 0.0;
+    for(int i = 0; i < n; i++) {
+        product += a[i] * b[i];
+    }
+    return product;
+}
+
+double getVectorLength(int *a, int n) {
+    double length = 0.0;
+    for(int i = 0; i < n; i++) {
+        length += a[i] * a[i];
+    }
+    return sqrt(length);
+}
+
+double getCosine(int *a, int *b, int n) {
+    double scalarProduct = getScalarProduct(a, b, n);
+    double lengthA = getVectorLength(a, n);
+    double lengthB = getVectorLength(b, n);
+    return scalarProduct / (lengthA + lengthB);
+}
+
+int getVectorIndexWithMaxAngle(matrix m, int *b) {
+    int nVectors = m.nRows;
+    double maxCosine = -1.0;
+    int maxIndex = -1;
+
+    for(int i = 0; i < nVectors; i++) {
+        double cosine = getCosine(m.values[i], b, m.nCols);
+        if(cosine > maxCosine) {
+            maxCosine = cosine;
+            maxIndex = i;
+        }
+    }
+
+    return maxIndex;
+}
+
 void task1() {
     int value1[] = {3, 12, 4, 2, 8, 12, 6, 4, 0};
     int value2[] = {10, 2, 5, 8, 1, 15, 3, 4, 7, 6, 12, 9, 11, 4, 14, 13};
@@ -445,7 +484,6 @@ void task6() {
 
     assert(isMutuallyInverseMatrices(m1, m2));
     assert(!isMutuallyInverseMatrices(m3, m4));
-
 }
 
 void task7() {
@@ -565,6 +603,18 @@ void task16() {
     assert(getNSpecialElement2(m1) == 4 && getNSpecialElement2(m2) == 2);
 }
 
+void task17() {
+    int b[] = {1, 2, 3};
+
+    int values1[] = {1, 0,0,0,1,0,0,0,1};
+    int values2[] = {1,2,3,3,2,1,2,3,1};
+
+    matrix m1 = createMatrixFromArray(values1, 3, 3);
+    matrix m2 = createMatrixFromArray(values2, 3, 3);
+
+    assert(getVectorIndexWithMaxAngle(m1, b) == 2 && getVectorIndexWithMaxAngle(m2, b) == 0);
+}
+
 int main() {
     task1();
     task2();
@@ -581,5 +631,7 @@ int main() {
     task13();
     task14();
     task16();
+    task17();
+
     return 0;
 }
